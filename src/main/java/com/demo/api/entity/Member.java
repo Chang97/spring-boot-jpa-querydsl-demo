@@ -9,12 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "members")
-@SequenceGenerator(name = "member_seq_gen", sequenceName = "member_seq", allocationSize = 50)
-@Data
+@SequenceGenerator(name = "member_seq_gen", sequenceName = "member_seq")
+@Getter @Setter
 public class Member {
 
     @Id

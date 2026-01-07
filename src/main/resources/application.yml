@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jpa_demo   # 로컬 Postgres 접속 정보
+    username: jpa
+    password: jpa
+    hikari:
+      maximum-pool-size: 10        # 동시 커넥션 상한(개발/로컬 기본값)
+      minimum-idle: 2              # 유휴 커넥션 최소 보유 개수
+
+  jpa:
+    open-in-view: false            # 컨트롤러 진입 전 영속성 컨텍스트 닫기(권장: DTO로 반환)
+    hibernate:
+      ddl-auto: update             # 개발 편의: 엔티티 변경 자동 반영(파괴적 변경은 불가)
+    properties:
+      hibernate.format_sql: true   # 로그에 SQL 포매팅
+      hibernate.jdbc.batch_size: 50  # 벌크 INSERT/UPDATE 묶음 크기
+      hibernate.order_inserts: true  # INSERT 순서 정렬(배치 효율↑)
+      hibernate.order_updates: true  # UPDATE 순서 정렬(배치 효율↑)
+
+logging.level:
+  org.hibernate.SQL: debug         # 실행된 SQL 로그
+  org.hibernate.orm.jdbc.bind: trace # 바인딩 값까지 출력(개발용, 비활성 권장 in prod)
+
+server.port: 8080                  # 애플리케이션 포트
+spring.jackson.time-zone: Asia/Seoul # JSON 직렬화 타임존(일관성 확보)

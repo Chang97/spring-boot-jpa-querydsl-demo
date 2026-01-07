@@ -13,12 +13,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity 
 @Table(name = "order_item")
-@SequenceGenerator(name = "order_item_seq_gen", sequenceName = "order_item_seq", allocationSize = 50)
-@Data
+@SequenceGenerator(name = "order_item_seq_gen", sequenceName = "order_item_seq")
+@Getter @Setter
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_seq_gen")
@@ -44,11 +45,4 @@ public class OrderItem {
     @Column(nullable = false) 
     private Instant createdAt = Instant.now();
 
-    public void setOrder(Order order) { 
-        this.order = order; 
-    }
-
-    public void setProduct(Product product) { 
-        this.product = product; 
-    }
 }

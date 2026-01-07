@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-import com.demo.api.entity.OrderStatus;
+import com.demo.api.code.OrderStatus;
 
 public record OrderDetailResponse (
     Long id,
-    String memberUserName,
+    String memberUsername,
     OrderStatus status,
     BigDecimal totalAmount,
     Instant createdAt,
@@ -18,7 +18,7 @@ public record OrderDetailResponse (
         Long productId,
         String productName,
         BigDecimal unitPrice,
-        BigDecimal qty,
+        Integer qty,
         BigDecimal lineAmount
     ) {}
 }

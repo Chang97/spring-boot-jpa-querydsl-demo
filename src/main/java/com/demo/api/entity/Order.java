@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.demo.api.code.OrderStatus;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,11 +22,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity @Table(name = "orders")
-@SequenceGenerator(name = "order_seq_gen", sequenceName = "order_seq", allocationSize = 50)
-@Data
+@SequenceGenerator(name = "order_seq_gen", sequenceName = "order_seq")
+@Getter @Setter
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq_gen")
