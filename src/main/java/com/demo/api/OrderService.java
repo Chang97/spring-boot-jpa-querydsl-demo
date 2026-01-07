@@ -21,11 +21,20 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
+    public OrderDetailResponse getOrderDetail(Long id) {
+        return toResponse(orderRepository.findDetail(id).orElseThrow());
+    }
+
+    public List<OrderDetailResponse> getOrderList() {
+        return orderRepository.findAllBy().stream().map(this::toResponse).toList();
+    }
+    
     @Transactional
     public Long create(Long memberId, Map<Long, Integer> productQtyMap) {
         Member m = memberRepository.findById(memberId).orElseThrow();
@@ -50,16 +59,6 @@ public class OrderService {
         order.setTotalAmount(total);
 
         return orderRepository.save(order).getId(); // @GeneratedValue로 PK 채번
-    }
-
-    @Transactional(readOnly = true)
-    public OrderDetailResponse getOrderDetail(Long id) {
-        return toResponse(orderRepository.findDetail(id).orElseThrow());
-    }
-
-    @Transactional(readOnly = true)
-    public List<OrderDetailResponse> getOrderList() {
-        return orderRepository.findAllBy().stream().map(this::toResponse).toList();
     }
 
     @Transactional

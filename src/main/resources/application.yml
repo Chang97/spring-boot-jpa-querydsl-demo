@@ -16,6 +16,9 @@ spring:
       hibernate.jdbc.batch_size: 50  # 벌크 INSERT/UPDATE 묶음 크기
       hibernate.order_inserts: true  # INSERT 순서 정렬(배치 효율↑)
       hibernate.order_updates: true  # UPDATE 순서 정렬(배치 효율↑)
+      hibernate.default_batch_fetch_size: 100 # 연관 엔티티 페치 사이즈 (프록시들이 묶음으로 로딩되어 N+1 완화.)
+
+
 
 logging.level:
   org.hibernate.SQL: debug         # 실행된 SQL 로그

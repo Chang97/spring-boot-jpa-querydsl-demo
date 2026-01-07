@@ -26,7 +26,7 @@ import com.demo.api.entity.Order;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/orders")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
