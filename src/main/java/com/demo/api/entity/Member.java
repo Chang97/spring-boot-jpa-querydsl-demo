@@ -16,7 +16,7 @@ import lombok.Setter;
 @Table(name = "members")
 @SequenceGenerator(name = "member_seq_gen", sequenceName = "member_seq")
 @Getter @Setter
-public class Member {
+public class Member extends BaseAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_gen")

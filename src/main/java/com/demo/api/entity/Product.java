@@ -1,7 +1,6 @@
 package com.demo.api.entity;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +17,7 @@ import lombok.Setter;
 @Table(name = "products")
 @SequenceGenerator(name = "product_seq_gen", sequenceName = "product_seq")
 @Getter @Setter
-public class Product {
+public class Product extends BaseAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq_gen")
     private Long id;
@@ -31,7 +30,4 @@ public class Product {
 
     @Column(nullable = false)
     private Integer stockQty = 0;
-
-    @Column(nullable = false)
-    private Instant createdAt = Instant.now();
 }

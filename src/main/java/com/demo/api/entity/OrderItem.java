@@ -1,11 +1,11 @@
 package com.demo.api.entity;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,17 +20,25 @@ import lombok.Setter;
 @Table(name = "order_item")
 @SequenceGenerator(name = "order_item_seq_gen", sequenceName = "order_item_seq")
 @Getter @Setter
-public class OrderItem {
+public class OrderItem extends BaseAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_seq_gen")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "order_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+        name = "order_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name="fk_order_item_order")
+    )
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+        name = "product_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name="fk_order_item_product")
+    )
     private Product product;
 
     @Column(nullable = false, precision = 18, scale = 2) 
@@ -41,8 +49,5 @@ public class OrderItem {
 
     @Column(nullable = false, precision = 18, scale = 2) 
     private BigDecimal lineAmount;
-
-    @Column(nullable = false) 
-    private Instant createdAt = Instant.now();
 
 }
