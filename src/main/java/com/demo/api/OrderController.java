@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,7 +22,6 @@ import com.demo.api.dto.CreateOrderResponse;
 import com.demo.api.dto.DeleteResultResponse;
 import com.demo.api.dto.OrderDetailResponse;
 import com.demo.api.dto.OrderStatusChangedResponse;
-import com.demo.api.entity.Order;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,8 +57,8 @@ public class OrderController {
     /** 4) 상태 변경 */
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderStatusChangedResponse> changeStatus(@PathVariable Long id, @RequestParam OrderStatus to) {
-        Order o = orderService.changeStatus(id, to);
-        return ResponseEntity.ok(new OrderStatusChangedResponse(o.getId(), o.getStatus()));
+        orderService.changeStatus(id, to);
+        return ResponseEntity.ok(new OrderStatusChangedResponse(id, to));
     }
 
     /** 5) 주문 삭제 */
