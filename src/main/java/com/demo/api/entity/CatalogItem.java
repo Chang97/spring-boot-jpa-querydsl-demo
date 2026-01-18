@@ -42,9 +42,11 @@ public class CatalogItem extends BaseAuditableEntity {
     private String displayName;
 
     // DB별 DDL을 직접 쓰는 경우(남용 금지)
-    // 예: PostgreSQL 기본값과 주석을 함께 주입
-    @Column(columnDefinition = "varchar(10) not null default 'KR' /* market code */")
-    private String market;
+    // 타입만 columnDefinition에 유지
+    @Column(name = "market", columnDefinition = "citext", nullable = false)
+    @org.hibernate.annotations.ColumnDefault("'KR'")
+    @org.hibernate.annotations.Comment("market code")
+    private String market = "KR";
 
     /** ───── 숫자/금액 ───── */
     @Column(nullable = false, precision = 18, scale = 2) // 999,999,999,999,999.99

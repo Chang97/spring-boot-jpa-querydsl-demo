@@ -7,15 +7,17 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.demo.api.code.OrderStatus;
 import com.demo.api.entity.Order;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
     
     // 상세 화면: fetch join(페이징 X)
     @Query("""
@@ -41,6 +43,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @EntityGraph(attributePaths = {"member"})
     List<Order> findAllBy();
+
+    // 필요 시 다대일만 미리 로딩
+    @EntityGraph(attributePaths = {"member"})
+    Page<Order> findAll(Specification<Order> spec, Pageable pageable);
 
     List<Order> findByMemberUsernameAndStatusOrderByIdDesc(String username, OrderStatus status);
 

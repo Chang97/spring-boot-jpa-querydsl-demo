@@ -6,12 +6,16 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.demo.api.code.OrderStatus;
 import com.demo.api.dto.OrderDetailResponse;
+import com.demo.api.dto.OrderSearchCond;
 import com.demo.api.entity.Member;
 import com.demo.api.entity.Order;
 import com.demo.api.entity.OrderItem;
@@ -19,6 +23,7 @@ import com.demo.api.entity.Product;
 import com.demo.api.repo.MemberRepository;
 import com.demo.api.repo.OrderRepository;
 import com.demo.api.repo.ProductRepository;
+import com.demo.api.spec.OrderSpecs;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +44,34 @@ public class OrderService {
     /** 전체 목록: 간단 버전 (소규모 데이터/관리 화면용) */
     public List<OrderDetailResponse> getOrderList() {
         return orderRepository.findAllBy().stream().map(this::toResponse).toList();
+    }
+
+    /** 동적 검색: Specification */
+    public Page<OrderDetailResponse> search(OrderSearchCond cond, Pageable pageable) {
+        // 기본 정렬 보강(미지정 시 최신순)
+        Pageable page = pageable;
+        if (pageable.getSort().isUnsorted()) {
+            page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                    Sort.by(Sort.Direction.DESC, "createdAt", "id"));
+        }
+
+        Specification<Order> spec = Specification.allOf(
+            OrderSpecs.statusEq(cond.status()),
+            OrderSpecs.createdBetween(cond.from(), cond.to()),
+            OrderSpecs.totalGte(cond.minTotal()),
+            // (username like OR hasProduct) 를 하나의 블록으로
+            Specification.anyOf(
+                OrderSpecs.memberUsernameLike(cond.memberUsernameLike()),
+                OrderSpecs.hasProductId(cond.productId())
+            )
+        );
+
+        Page<Order> result = orderRepository.findAll(spec, page);
+
+        // N+1 방지:
+        // - 목록은 요약 정보만: member.username, totalAmount 등 단건 연관만 사용
+        // - 상세는 별도 findDetail(fetch join) API 사용
+        return result.map(this::toResponseSummary);
     }
 
     /** 상태별 페이지: 두 번 조회 전략 (ID 페이지 → 연관 일괄 로딩) */
@@ -93,7 +126,7 @@ public class OrderService {
     public void delete(Long id) {
         orderRepository.deleteById(id);
     }
-
+    
     // ───────────────────────── private mappers ─────────────────────────
 
     private OrderDetailResponse toResponse(Order o) {
@@ -114,6 +147,17 @@ public class OrderService {
             i.getUnitPrice(),
             i.getQty(),
             i.getLineAmount()
+        );
+    }
+
+    private OrderDetailResponse toResponseSummary(Order o) {
+        return new OrderDetailResponse(
+            o.getId(),
+            o.getMember().getUsername(),    // 단건 다대일 접근(요약)
+            o.getStatus(),
+            o.getTotalAmount(),
+            o.getCreatedAt(),
+            List.of() // 목록에선 라인 미포함(상세 API에서 채움)
         );
     }
 }

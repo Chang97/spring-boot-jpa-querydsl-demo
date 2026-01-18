@@ -1,7 +1,5 @@
 package com.demo.api.entity;
 
-import java.time.Instant;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +25,5 @@ public class Member extends BaseAuditableEntity {
 
     @Column(nullable = false, length = 120, unique = true)
     private String email;
-
-    @Column(nullable = false)
-    private Instant createdAt = Instant.now();
     
 }
