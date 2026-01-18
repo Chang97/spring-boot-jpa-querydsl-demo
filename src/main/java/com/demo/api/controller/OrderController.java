@@ -1,4 +1,4 @@
-package com.demo.api;
+package com.demo.api.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -22,6 +22,7 @@ import com.demo.api.dto.CreateOrderResponse;
 import com.demo.api.dto.DeleteResultResponse;
 import com.demo.api.dto.OrderDetailResponse;
 import com.demo.api.dto.OrderStatusChangedResponse;
+import com.demo.api.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
 

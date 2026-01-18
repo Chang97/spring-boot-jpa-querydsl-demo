@@ -1,4 +1,4 @@
-package com.demo.api;
+package com.demo.api.service;
 
 import java.math.BigDecimal;
 import java.util.List;
