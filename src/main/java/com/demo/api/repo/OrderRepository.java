@@ -17,7 +17,7 @@ import org.springframework.data.repository.query.Param;
 import com.demo.api.code.OrderStatus;
 import com.demo.api.entity.Order;
 
-public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
+public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order>, OrderQueryRepository {
     
     // 상세 화면: fetch join(페이징 X)
     @Query("""
